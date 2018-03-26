@@ -51,9 +51,6 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             status = false;
             Log.d("VS", "Released");
-            recorder.stop();
-            recorder.release();
-            recorder = null;
         }
         return false;
     }
@@ -89,6 +86,10 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
                         socket.send(packet);
                         System.out.println("MinBufferSize: " + minBufSize);
                     }
+					
+					recorder.stop();
+					recorder.release();
+					recorder = null;
 
 
                 } catch (UnknownHostException e) {
