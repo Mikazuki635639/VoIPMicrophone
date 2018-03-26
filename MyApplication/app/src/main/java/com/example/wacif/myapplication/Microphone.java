@@ -5,26 +5,33 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
+import android.content.Intent;
+import android.app.Activity;
+import android.net.rtp.RtpStream;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.*;
+import android.widget.Button;
 import android.widget.ToggleButton;
+import android.widget.EditText;
 import android.util.Log;
+import static java.lang.Thread.currentThread;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
-
 public class Microphone extends AppCompatActivity implements View.OnTouchListener {
 
     //public byte[] buffer;
     //public static DatagramSocket socket;
-    private final int port=50005;
+    private final int port=5005;
 
     AudioRecord recorder;
-    static boolean status = false;
+    //RtpStream recorder;
+    volatile boolean status = false;
 
     private final int sampleRate = 16000 ; // 44100 for music
     private final int channelConfig = AudioFormat.CHANNEL_IN_MONO;
@@ -39,6 +46,9 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
         ToggleButton pushToTalkButton = (ToggleButton) findViewById(R.id.btn_Microphone);
         pushToTalkButton.setOnTouchListener(this);
 
+        Button wifiSearchButton = (Button) findViewById(R.id.btn_RoomSelection);
+        //wifiSearchButton.setOnClickListener(this);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
@@ -52,11 +62,12 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
             status = false;
             Log.d("VS", "Released");
         }
+
         return false;
     }
 
     public void startStreaming() {
-
+        final EditText destinationIP = (EditText) findViewById(R.id.txt_UserName);
         Thread streamThread = new Thread(new Runnable() {
 
             @Override
@@ -68,7 +79,7 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
                     byte[] buffer = new byte[minBufSize];
                     DatagramPacket packet;
 
-                    final InetAddress destination = InetAddress.getByName("192.168.0.100"); //me
+                    final InetAddress destination = InetAddress.getByName(destinationIP.getText().toString()); //me
                     //final InetAddress destination = InetAddress.getByName("10.190.6.43"); //hugo
 
                     recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
@@ -86,10 +97,10 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
                         socket.send(packet);
                         System.out.println("MinBufferSize: " + minBufSize);
                     }
-					
-					recorder.stop();
-					recorder.release();
-					recorder = null;
+
+                    recorder.stop();
+                    recorder.release();
+                    recorder = null;
 
 
                 } catch (UnknownHostException e) {
@@ -102,5 +113,13 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
 
         });
         streamThread.start();
+    }
+
+    public void SearchWifi(View view)
+    {
+        int requestCode = 0;
+        Intent intent = new Intent(Microphone.this, WifiSearch.class);
+        //startActivityForResult(intent,requestCode);
+        startActivity(intent);
     }
 }

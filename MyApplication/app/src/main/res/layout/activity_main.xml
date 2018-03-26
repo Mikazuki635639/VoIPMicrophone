@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <include android:id="@+id/layout_microphone"
+            layout="@layout/activity_microphone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </include>
+
+        <include android:id="@+id/layout_wificonnect"
+            layout="@layout/activity_wificonnect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </include>
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>

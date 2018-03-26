@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/layout_wificonnect"
+        >
+
+        <TableLayout
+            android:id="@+id/tbl_DestinationIP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_column="1"
+                    android:text="Destination IP: "
+                    android:layout_marginLeft="10dp"
+                    />
+
+                <EditText
+                    android:layout_column="2"
+                    android:id="@+id/txt_DestinationIP"
+                    android:text="192.168.0.22"
+                    android:layout_width="wrap_content"
+                    />
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
