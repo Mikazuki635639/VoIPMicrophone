@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.net.rtp.RtpStream;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Build;
 import android.view.*;
 import android.widget.Button;
 import android.widget.ToggleButton;
@@ -22,6 +23,7 @@ import static java.lang.Thread.currentThread;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.audiofx.*;
 
 public class Microphone extends AppCompatActivity implements View.OnTouchListener {
 
@@ -83,7 +85,29 @@ public class Microphone extends AppCompatActivity implements View.OnTouchListene
                     //final InetAddress destination = InetAddress.getByName("10.190.6.43"); //hugo
 
                     recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
+
+                    //apply a bunch of audio fixers
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                    {
+                        boolean agcAvailable = AutomaticGainControl.isAvailable();
+                        if (agcAvailable)
+                        {
+                            AutomaticGainControl.create(recorder.getAudioSessionId());
+                        }
+                        boolean noiseSupressAvailable = NoiseSuppressor.isAvailable();
+                        if (noiseSupressAvailable)
+                        {
+                            NoiseSuppressor.create(recorder.getAudioSessionId());
+                        }
+
+                        boolean echoCancelAvailable = AcousticEchoCanceler.isAvailable();
+                        if (echoCancelAvailable)
+                        {
+                            AcousticEchoCanceler.create(recorder.getAudioSessionId());
+                        }
+                    }
                     recorder.startRecording();
+
 
                     while (status) {
 
